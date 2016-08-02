@@ -1,0 +1,147 @@
+*,
+*:before {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+body {
+    font: 14px/1.5 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
+}
+
+.root {
+    background: url('mountain-peak.jpg') 50% no-repeat fixed;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+.shell {
+    width: 600px;
+    position: absolute;
+    background: inherit;
+    border-radius: 5px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+    top: 50%;
+    left: 50%;
+    margin-top: -150px;
+    margin-left: -300px;
+    /*transform: translate(-50%, -50%);*/
+    font-family: Menlo, Monaco, "Consolas", "Courier New", "Courier";
+}
+
+.shell > * {
+    position: relative;
+}
+
+.shell:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: inherit;
+    -webkit-filter: blur(10px) saturate(2);
+    filter: blur(10px) saturate(2);
+}
+
+.shell-topbar {
+    background: rgba(224, 232, 240, .85);
+    box-shadow: 0 1px 1px rgba(0,0,0,.2);
+    height: 36px;
+}
+
+.btn,
+.btn::before,
+.btn::after {
+    width: 12px;
+    height: 12px;
+    border-radius: 100%;
+    display: block;
+}
+
+.btn {
+    background: #f6b73e;
+    position: relative;
+    margin-left: 38px;
+    top: 12px;
+}
+
+.btn::before,
+.btn::after {
+    content: " ";
+    position: absolute;
+}
+
+.btn::before {
+    background: #f55551;
+    margin-left: -20px;
+}
+
+.btn::after {
+    background: #32c146;
+    margin-left: 20px;
+}
+
+.shell .shell-title {
+    padding: 8px;
+    background: rgba(235, 235, 235, .8);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.shell .shell-title:hover {
+    cursor: move;
+}
+
+.shell .shell-body {
+    padding: 16px;
+    background: rgba(255, 255, 255, .75);
+    word-wrap: break-word;
+    height: 300px;
+}
+
+.shell .shell-body input {
+    width: 100%;
+    border: 0;
+    outline: 0;
+    background-color: transparent;
+    color: #000;
+    font-family: inherit;
+    position: relative;
+    font-size: 13px;
+}
+
+::-webkit-input-placeholder {
+    color: rgba(#000, .4);
+}
+
+:-moz-placeholder {
+    color: rgba(#000, .4);
+}
+
+::-moz-placeholder {
+    color: rgba(#000, .4);
+}
+
+:-ms-input-placeholder {
+    color: rgba(#000, .4);
+}
+
+.syntax-placeholder,
+.syntax-helper {
+    color: #757575;
+}
+.syntax-positive {
+    color: #32c146;
+}

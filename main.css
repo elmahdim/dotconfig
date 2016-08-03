@@ -17,7 +17,7 @@ body {
 }
 
 .root {
-    background: url('mountain-peak.jpg') 50% no-repeat fixed;
+    background: url('background.jpg') 50% no-repeat fixed;
     background-size: cover;
     margin: 0;
     padding: 0;
@@ -95,7 +95,7 @@ body {
 
 .shell .shell-title {
     padding: 8px;
-    background: rgba(235, 235, 235, .8);
+    background: rgba(235, 235, 235, .95);
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     text-align: center;
 }
@@ -106,7 +106,7 @@ body {
 
 .shell .shell-body {
     padding: 16px;
-    background: rgba(255, 255, 255, .75);
+    background: rgba(255, 255, 255, .85);
     word-wrap: break-word;
     height: 300px;
 }
@@ -120,8 +120,37 @@ body {
     font-family: inherit;
     position: relative;
     font-size: 13px;
+    padding-top: 5px;
 }
-
+.shell .shell-body ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 12px;
+}
+table {
+    border-spacing: 0;
+    border-collapse: collapse;
+    background-color: transparent;
+    width: 100%;
+    max-width: 100%;
+}
+table thead th {
+    padding-bottom: 5px;
+}
+table th,
+table td {
+    padding: 0;
+    vertical-align: top;
+    font-size: 13px;
+    text-align: left;
+}
+/*.command-title:before {
+    content : "~";
+    display: inline-block;
+    margin-right: 5px;
+    font-weight: bold;
+}*/
 ::-webkit-input-placeholder {
     color: rgba(#000, .4);
 }

@@ -1,98 +1,106 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import CommandRender from './Components/CommandRender';
 
 class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            content: ['Welcome to dotConfig'],
-            commandsList: [
-                {
-                    name: 'help',
-                    desc: 'here\'s a list of all available commands'
-                },
-                {
-                    name: 'clear',
-                    desc: 'clears terminal screen',
-                    alias: 'Ctrl+L'
-                },
-                {
-                    name: 'touch',
-                    desc: 'create new configuration',
-                    alias: 'Ctrl+L'
-                },
-                {
-                    name: 'save',
-                    desc: 'grab/download your files',
-                    alias: 'Ctrl+S'
-                }
-            ],
-            placeholder : 'try typing hi or help'
+            content: ['Welcome to dotConfig (v1.0.0)'],
+            placeholder : 'Documentation: type "help"',
+            flag : false
         };
         this._shortcutsHandler = this._shortcutsHandler.bind(this);
         this._inputHandler     = this._inputHandler.bind(this);
         this._focusHandler     = this._focusHandler.bind(this);
+        this._commandActions   = this._commandActions.bind(this);
     }
-    componentDidMount() {        
+    componentDidMount() {
         this._focusHandler;
     }
     render() {
+        const sortedList = this.props.commands.sort((a) => (a.hasOwnProperty('alias') ?  -1 :  1 )  );
+        const commands = CommandRender(sortedList);
         return ( 
             <div className="shell">
                 <div className="shell-topbar"><div className="btn"></div></div>
                 <div className="shell-body" onClick={this._focusHandler}>
                     <div className="shell-viewport">
-                        <p className="syntax-placeholder">{this.state.content}</p>
+                        {this.state.flag ? 
+                            <table>
+                            <thead>{
+                                ['Command', 'Alias', 'Description'].map(function(label, i) {
+                                    return <th className="syntax-helper" key={i}>{label}</th>;
+                                })}
+                            </thead>
+                            <tbody>{commands}</tbody>   
+                            </table> 
+                            : <p className="syntax-placeholder">{this.state.content}</p> }
                     </div> 
                     <input 
                         type="text"
                         ref="shellField"
                         spellCheck="false"
-                        onKeyPress={ this._inputHandler }
-                        onKeyDown={ this._shortcutsHandler }
-                        placeholder={this.state.placeholder} />
+                        onKeyPress={this._inputHandler }
+                        onKeyDown={this._shortcutsHandler }
+                        placeholder={this.state.placeholder} />  
+                    <a ref="saveAs" href="data:application/xml;charset=utf-8,your code here" download="filename.config.js"></a>
                 </div> 
             </div>
         );
+    }
+    _commandActions(_command){
+        if (_command === 'save' || _command === 'gimme') {
+            ReactDOM.findDOMNode(this.refs.saveAs).click();
+        }
     }
     _focusHandler(){
         ReactDOM.findDOMNode(this.refs.shellField).focus();
     }
     _inputHandler(e) {
+        let oldContent = this.state.content;
         if (e.key === 'Enter') {
             let enteredValue = e.target.value;
-            let commandArr   = this.state.commandsList;
-            let _printOutput = "";
-            if (commandArr.filter(function(e) { return e.name == enteredValue; }).length > 0) {
-                if(enteredValue == 'help') {
-                     _printOutput = '~ ' + commandArr[0].desc;
+            if (this.props.commands.filter(function(e) { return e.name == enteredValue || e.alias == enteredValue; }).length > 0) {
+                if(enteredValue == 'help' || enteredValue == 'h') {
+                    this.setState({
+                        flag : true,
+                        placeholder : 'Let\'s get it on' + String.fromCharCode(8230) // JSX Gotchas - HTML Entities
+                    });
                 } else if(enteredValue == 'clear') {
-                    _printOutput = ' ';
+                    this.setState({
+                        flag : false,
+                        content: ''
+                    });
                 } else {
-                    _printOutput = '$ ' + enteredValue;
+                    this.setState({
+                        content: '$ ' + enteredValue,
+                        placeholder : ''
+                    });
+                    this._commandActions(enteredValue);
                 }
+            } else {
+                this.setState({
+                    flag : false,
+                    content: enteredValue + ': command not found'
+                });
             }
-            else {
-                _printOutput = enteredValue + ': command not found';
-            }
-            this.setState({ 
-                content: _printOutput,
-                placeholder: ""
-            });
             this._resetFields();
+            e.preventDefault();
         }
     }
     _shortcutsHandler(e){
         if (e.ctrlKey && e.which === 76) {
             e.preventDefault();
-            this.setState({ 
-                content: "",
-                placeholder: ""
+            this.setState({
+                flag : false,
+                content: '',
+                placeholder: ''
             });
         }
     }
     _resetFields() {
-        document.querySelector('.shell input').value = '';
+        ReactDOM.findDOMNode(this.refs.shellField).value = '';
     }
 }
 

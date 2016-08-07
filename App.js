@@ -8,18 +8,21 @@ class App extends React.Component {
         this.state = {
             content: ['Welcome to dotConfig (v1.0.0)'],
             placeholder : 'Documentation: type "help"',
+            commands : [],
             flag : false
         };
         this._shortcutsHandler = this._shortcutsHandler.bind(this);
         this._inputHandler     = this._inputHandler.bind(this);
         this._focusHandler     = this._focusHandler.bind(this);
         this._commandActions   = this._commandActions.bind(this);
+        this._getCommandsData  = this._getCommandsData.bind(this);
     }
     componentDidMount() {
         this._focusHandler;
+        this._getCommandsData('data/commands.json');
     }
     render() {
-        const sortedList = this.props.commands.sort((a) => (a.hasOwnProperty('alias') ?  -1 :  1 )  );
+        const sortedList = this.state.commands.sort((a) => (a.hasOwnProperty('alias') ?  -1 :  1 )  );
         const commands = CommandRender(sortedList);
         return ( 
             <div className="shell">
@@ -49,6 +52,24 @@ class App extends React.Component {
             </div>
         );
     }
+    _getCommandsData(_data){
+        return fetch(_data)
+          .then(function(response) {
+            if (response.status == 200) {
+                return response.json()
+            } else {
+               throw new Error('Something went!');
+            }
+          })
+          .then(response => {
+            this.setState({
+                commands: response
+            });
+          })
+          .catch(function(error) {
+            console.error(error);
+          });
+    }
     _commandActions(_command){
         if (_command === 'save' || _command === 'gimme') {
             ReactDOM.findDOMNode(this.refs.saveAs).click();
@@ -61,7 +82,7 @@ class App extends React.Component {
         let oldContent = this.state.content;
         if (e.key === 'Enter') {
             let enteredValue = e.target.value;
-            if (this.props.commands.filter(function(e) { return e.name == enteredValue || e.alias == enteredValue; }).length > 0) {
+            if (this.state.commands.filter(function(e) { return e.name == enteredValue || e.alias == enteredValue; }).length > 0) {
                 if(enteredValue == 'help' || enteredValue == 'h') {
                     this.setState({
                         flag : true,
